@@ -8,7 +8,7 @@
 #' documentation](https://platform.openai.com/docs/api-reference/chat/create).
 #'
 #' @param model required; a length one character vector.
-#' @param base_url required; a length one character vector.
+#' @param root_url required; a length one character vector.
 #' @param messages required; defaults to `NULL`; a list in the following
 #'   format: `list(list("role" = "user", "content" = "Hey! How old are you?")`
 #' @param temperature required; defaults to `1`; a length one numeric vector
@@ -39,7 +39,7 @@
 #' @examples \dontrun{
 #' create_chat_completion(
 #'    model = "gpt-3.5-turbo",
-#'    base_url = "insert_your_own"
+#'    root_url = "https://XXXX.openai.azure.com/openai/deployments"
 #'    messages = list(
 #'        list(
 #'            "role" = "system",
@@ -88,8 +88,8 @@ create_chat_completion<- function(
     )
 
     assertthat::assert_that(
-        assertthat::is.string(base_url),
-        assertthat::noNA(base_url)
+        assertthat::is.string(root_url),
+        assertthat::noNA(root_url)
     )     
 
     if (!is.null(messages)) {
