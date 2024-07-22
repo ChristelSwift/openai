@@ -9,6 +9,7 @@
 #'
 #' @param model required; a length one character vector.
 #' @param root_url required; a length one character vector.
+#' @param api_version required; defaults to `api-version=2023-05-15`; a length one character vector.
 #' @param messages required; defaults to `NULL`; a list in the following
 #'   format: `list(list("role" = "user", "content" = "Hey! How old are you?")`
 #' @param temperature required; defaults to `1`; a length one numeric vector
@@ -64,6 +65,7 @@
 create_chat_completion<- function(
         model,
         root_url,
+        api_version = "api-version=2023-05-15",
         messages = NULL,
         temperature = 1,
         top_p = 1,
