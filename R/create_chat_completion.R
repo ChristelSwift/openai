@@ -8,6 +8,7 @@
 #' documentation](https://platform.openai.com/docs/api-reference/chat/create).
 #'
 #' @param model required; a length one character vector.
+#' @param base_url required; a length one character vector.
 #' @param messages required; defaults to `NULL`; a list in the following
 #'   format: `list(list("role" = "user", "content" = "Hey! How old are you?")`
 #' @param temperature required; defaults to `1`; a length one numeric vector
@@ -38,6 +39,7 @@
 #' @examples \dontrun{
 #' create_chat_completion(
 #'    model = "gpt-3.5-turbo",
+#'    base_url = "insert_your_own"
 #'    messages = list(
 #'        list(
 #'            "role" = "system",
@@ -61,6 +63,7 @@
 #' @export
 create_chat_completion<- function(
         model,
+        root_url,
         messages = NULL,
         temperature = 1,
         top_p = 1,
@@ -83,6 +86,11 @@ create_chat_completion<- function(
         assertthat::is.string(model),
         assertthat::noNA(model)
     )
+
+    assertthat::assert_that(
+        assertthat::is.string(base_url),
+        assertthat::noNA(base_url)
+    )     
 
     if (!is.null(messages)) {
         assertthat::assert_that(
@@ -175,12 +183,7 @@ create_chat_completion<- function(
 
     task <- "chat/completions"
 
-    base_url <- glue::glue("https://ccog-swedencentral.openai.azure.com/{task}")
-
-    headers <- c(
-        "Authorization" = paste("Bearer", openai_api_key),
-        "Content-Type" = "application/json"
-    )
+    base_url <- glue::glue("{root_url}/{model}/{task}?{api_version}")    
 
     if (!is.null(openai_organization)) {
         headers["OpenAI-Organization"] <- openai_organization
@@ -208,7 +211,7 @@ create_chat_completion<- function(
 
     response <- httr::POST(
         url = base_url,
-        httr::add_headers(.headers = headers),
+        httr::add_headers('api-key' = openai_key),
         body = body,
         encode = "json"
     )
